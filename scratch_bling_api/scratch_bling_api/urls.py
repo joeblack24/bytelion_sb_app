@@ -17,10 +17,11 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
 
-from back_scratchers.views import HelloView
+from back_scratchers.views import HelloView, get_back_scratchers
 
 urlpatterns = [
     path('hello/', HelloView.as_view(), name='hello'),
     path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
     path('admin/', admin.site.urls),
+    path('get-back-scratchers/<str:search_term>', get_back_scratchers)
 ]

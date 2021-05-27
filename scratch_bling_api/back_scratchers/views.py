@@ -21,7 +21,8 @@ class HelloView(APIView):
 
 
 @api_view(['GET'])
-def get_back_scratchers(request, search_term = None):
+def get_back_scratchers(request, search_term=None):
+    permission_classes = (IsAuthenticated,)
     if search_term:
         back_scratchers = BackScratchers.objects.filter(Q(name__icontains=search_term) | Q(description__icontains=search_term))
     else:
@@ -38,6 +39,7 @@ def get_back_scratchers(request, search_term = None):
 
 @api_view(['POST'])
 def create_back_scratcher(request):
+    permission_classes = (IsAuthenticated,)
     if request.method != 'POST':
         return Response({'error': 'Invalid request type'})
     else:
@@ -64,6 +66,7 @@ def create_back_scratcher(request):
 
 @api_view(['PUT', 'POST'])
 def update_back_scratcher(request):
+    permission_classes = (IsAuthenticated,)
     if request.method != 'PUT' and request.method != 'POST':
         return Response({'error': 'Invalid request type'})
     else:
@@ -94,6 +97,7 @@ def update_back_scratcher(request):
 
 @api_view(['POST', 'PUT'])
 def delete_back_scratchers(request):
+    permission_classes = (IsAuthenticated,)
     data = request.data
     deleted_scratchers = []
     not_deleted_scratchers = []

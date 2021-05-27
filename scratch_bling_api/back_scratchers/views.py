@@ -64,7 +64,7 @@ class CreateBackScratchersView(APIView):
 class UpdateBackScratcherView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def post(self, request):
+    def put(self, request):
         data = request.data
         if 'id' not in data.keys():
             return Response({'error': 'id required for update'}, status=400)

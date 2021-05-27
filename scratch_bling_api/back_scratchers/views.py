@@ -102,7 +102,7 @@ def update_back_scratcher(request):
             back_scratcher.save()
             return Response({'success': f'Back Scratcher {back_scratcher.name} updated'})
 
-@api_view(['DELETE'])
+@api_view(['POST', 'PUT'])
 def delete_back_scratchers(request):
     data = request.data
     deleted_scratchers = []

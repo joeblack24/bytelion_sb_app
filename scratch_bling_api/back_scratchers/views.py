@@ -51,7 +51,10 @@ def create_back_scratcher(request):
         new_back_scratcher = BackScratchers(name=data['name'], description=data['description'])
         size_list=[]
         for size in data['size']:
-            current_size = Size.objects.filter(size__iexact=size)
+            try:
+                current_size = Size.objects.filter(size__iexact=size)
+            except Exception as e:
+                return Response({'error': size + ' does not exist'}, status=400)
             print(f'got size {current_size}')
             if current_size:
                 size_list.append(current_size[0])
@@ -68,7 +71,69 @@ def create_back_scratcher(request):
         return Response({'success': f'Back Scratcher {new_back_scratcher.name} added',
                          'id': new_back_scratcher.id})
 
-@api_view(['PUT'])
+@api_view(['PUT', 'POST'])
 def update_back_scratcher(request):
     if request.method != 'PUT' or request.method != 'POST':
         return Response({'error': 'Invalid request type'})
+    else:
+        data = request.data
+        if 'id' not in data.keys():
+            return Response({'error': 'ID required for update'}, status=400)
+        else:
+            try:
+                back_scratcher = BackScratchers.objects.get(id=data['id'])
+            except Exception as e:
+                return Response({'error': str(data['id']) +' does not exist'}, status=400)
+            if 'name' in data.keys():
+                back_scratcher.name = data['name']
+            if 'description' in data.keys():
+                back_scratcher.description = data['description']
+            if 'size' in data.keys():
+                size_list=[]
+                for size in data['size']:
+                    try:
+                        current_size = Size.objects.filter(size__iexact=size)
+                    except Exception as e:
+                        return Response({'error': size + ' does not exist'}, status=400)
+                    print(f'got size {current_size}')
+                    if current_size:
+                        size_list.append(current_size[0])
+                back_scratcher.size.set(size_list)
+            back_scratcher.save()
+            return Response({'success': f'Back Scratcher {back_scratcher.name} updated'})
+
+@api_view(['DELETE'])
+def delete_back_scratchers(request):
+    data = request.data
+    deleted_scratchers = []
+    not_deleted_scratchers = []
+    if 'id' not in data.keys():
+        return Response({'error': 'ID required for deletion'}, status=400)
+    else:
+        if type(data['id']) == int:
+            try:
+                back_scratcher = BackScratchers.objects.get(id=data['id'])
+                back_scratcher.delete()
+                deleted_scratchers.append(int(data['id']))
+            except Exception as e:
+                not_deleted_scratchers.append((data['id']))
+                # return Response({'error': str(data['id']) + ' does not exist'}, status=400)
+        elif type(data['id']) == str:
+            try:
+                back_scratcher = BackScratchers.objects.get(id=int(data['id']))
+                back_scratcher.delete()
+                deleted_scratchers.append(int(data['id']))
+            except Exception as e:
+                not_deleted_scratchers.append((data['id']))
+                # return Response({'error': str(data['id']) + ' does not exist'}, status=400)
+        elif type(data['id']) == list:
+            for scratcher_id in data['id']:
+                try:
+                    back_scratcher = BackScratchers.objects.get(id=scratcher_id)
+                    back_scratcher.delete()
+                    deleted_scratchers.append(scratcher_id)
+                except Exception as e:
+                    not_deleted_scratchers.append((data['id']))
+                    # return Response({'error': str(data['id']) + ' does not exist'}, status=400)
+        return Response({'successful_deletions': deleted_scratchers, 'failed_deletions': not_deleted_scratchers})
+

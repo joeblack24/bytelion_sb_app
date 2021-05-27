@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
 
-from back_scratchers.views import HelloView, get_back_scratchers, create_back_scratcher
+from back_scratchers.views import HelloView, get_back_scratchers, create_back_scratcher, update_back_scratcher, \
+    delete_back_scratchers
 
 urlpatterns = [
     path('hello/', HelloView.as_view(), name='hello'),
@@ -26,4 +27,7 @@ urlpatterns = [
     path('get-back-scratchers/', get_back_scratchers, name='all_back_scratchers'),
     path('get-back-scratchers/<str:search_term>', get_back_scratchers, name='get_back_scratchers'),
     path('create-back-scratcher/', create_back_scratcher, name='create_back_scratcher'),
+    path('update-back-scratcher/', update_back_scratcher, name='update_back_scratcher'),
+    path('delete-back-scratchers/', delete_back_scratchers, name='delete back scratchers'),
+
 ]

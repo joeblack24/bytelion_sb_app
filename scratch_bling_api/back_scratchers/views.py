@@ -73,7 +73,7 @@ def create_back_scratcher(request):
 
 @api_view(['PUT', 'POST'])
 def update_back_scratcher(request):
-    if request.method != 'PUT' or request.method != 'POST':
+    if request.method != 'PUT' and request.method != 'POST':
         return Response({'error': 'Invalid request type'})
     else:
         data = request.data

@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
 
-from back_scratchers.views import HelloView, GetBackScratchersView, CreateBackScratchersView, UpdateBackScratcherView, \
+from back_scratchers.views import GetBackScratchersView, CreateBackScratchersView, UpdateBackScratcherView, \
     DeleteBackScratcherView
 
 urlpatterns = [

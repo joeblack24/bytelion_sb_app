@@ -98,7 +98,7 @@ WSGI_APPLICATION = 'scratch_bling_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'bytelion-app-db',
+        'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'Testapp1',
         'HOST': 'bytelion-app-db.cytsxk6o94j1.us-east-2.rds.amazonaws.com',

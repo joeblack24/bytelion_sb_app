@@ -68,4 +68,7 @@ def create_back_scratcher(request):
         return Response({'success': f'Back Scratcher {new_back_scratcher.name} added',
                          'id': new_back_scratcher.id})
 
-
+@api_view(['PUT'])
+def update_back_scratcher(request):
+    if request.method != 'PUT' or request.method != 'POST':
+        return Response({'error': 'Invalid request type'})

@@ -5,6 +5,7 @@ class SizeSerializer(serializers.Serializer):
 
 
 class BackScratchersSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
     name = serializers.CharField(max_length=30)
     description = serializers.CharField(max_length=30)
     size = SizeSerializer(many=True)

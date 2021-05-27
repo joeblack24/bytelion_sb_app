@@ -70,7 +70,7 @@ def update_back_scratcher(request):
     else:
         data = request.data
         if 'id' not in data.keys():
-            return Response({'error': 'ID required for update'}, status=400)
+            return Response({'error': 'id required for update'}, status=400)
         else:
             try:
                 back_scratcher = BackScratchers.objects.get(id=data['id'])

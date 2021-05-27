@@ -51,7 +51,7 @@ def get_back_scratchers(request, search_term=None):
 class CreateBackScratchersView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request):
+    def post(self, request):
         if request.method != 'POST':
             return Response({'error': 'Invalid request type'})
         else:
@@ -107,34 +107,34 @@ def create_back_scratcher(request):
 class UpdateBackScratcherView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request):
-        if request.method != 'PUT' and request.method != 'POST':
-            return Response({'error': 'Invalid request type'})
+    def post(self, request):
+        data = request.data
+        if 'id' not in data.keys():
+            return Response({'error': 'id required for update'}, status=400)
         else:
-            data = request.data
-            if 'id' not in data.keys():
-                return Response({'error': 'id required for update'}, status=400)
-            else:
-                try:
-                    back_scratcher = BackScratchers.objects.get(id=data['id'])
-                except Exception as e:
-                    return Response({'error': str(data['id']) + ' does not exist'}, status=400)
-                if 'name' in data.keys():
-                    back_scratcher.name = data['name']
-                if 'description' in data.keys():
-                    back_scratcher.description = data['description']
-                if 'size' in data.keys():
-                    size_list = []
-                    for size in data['size']:
-                        try:
-                            current_size = Size.objects.filter(size__iexact=size)
-                        except Exception as e:
-                            return Response({'error': size + ' does not exist'}, status=400)
-                        if current_size:
-                            size_list.append(current_size[0])
-                    back_scratcher.size.set(size_list)
-                back_scratcher.save()
-                return Response({'success': f'Back Scratcher {back_scratcher.name} updated'})
+            try:
+                back_scratcher = BackScratchers.objects.get(id=data['id'])
+            except Exception as e:
+                return Response({'error': str(data['id']) + ' does not exist'}, status=400)
+            if 'name' in data.keys():
+                back_scratcher.name = data['name']
+            if 'description' in data.keys():
+                back_scratcher.description = data['description']
+            if 'size' in data.keys():
+                size_list = []
+                for size in data['size']:
+                    try:
+                        current_size = Size.objects.filter(size__iexact=size)
+                    except Exception as e:
+                        return Response({'error': size + ' does not exist'}, status=400)
+                    if current_size:
+                        size_list.append(current_size[0])
+                back_scratcher.size.set(size_list)
+            back_scratcher.save()
+            return Response({'success': f'Back Scratcher {back_scratcher.name} updated'})
+
+    def put(self, request):
+        self.post(request)
 
 
 @api_view(['PUT', 'POST'])
@@ -171,7 +171,7 @@ def update_back_scratcher(request):
 class DeleteBackScratcherView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request):
+    def post(self, request):
         data = request.data
         deleted_scratchers = []
         not_deleted_scratchers = []
@@ -195,6 +195,8 @@ class DeleteBackScratcherView(APIView):
                         not_deleted_scratchers.append(int(scratcher_id))
             return Response({'successful_deletions': deleted_scratchers, 'failed_deletions': not_deleted_scratchers})
 
+    def put(self, request):
+        self.post(request)
 
 @api_view(['POST', 'PUT'])
 def delete_back_scratchers(request):

@@ -1,4 +1,3 @@
-# from django.shortcuts import render
 import json
 
 from django.db.models import Q
@@ -101,30 +100,20 @@ def delete_back_scratchers(request):
     if 'id' not in data.keys():
         return Response({'error': 'ID required for deletion'}, status=400)
     else:
-        if type(data['id']) == int:
-            try:
-                back_scratcher = BackScratchers.objects.get(id=data['id'])
-                back_scratcher.delete()
-                deleted_scratchers.append(int(data['id']))
-            except Exception as e:
-                not_deleted_scratchers.append((data['id']))
-                # return Response({'error': str(data['id']) + ' does not exist'}, status=400)
-        elif type(data['id']) == str:
+        if type(data['id']) == int or type(data['id']) == str:
             try:
                 back_scratcher = BackScratchers.objects.get(id=int(data['id']))
                 back_scratcher.delete()
                 deleted_scratchers.append(int(data['id']))
             except Exception as e:
                 not_deleted_scratchers.append((data['id']))
-                # return Response({'error': str(data['id']) + ' does not exist'}, status=400)
         elif type(data['id']) == list:
             for scratcher_id in data['id']:
                 try:
-                    back_scratcher = BackScratchers.objects.get(id=scratcher_id)
+                    back_scratcher = BackScratchers.objects.get(id=(int(scratcher_id)))
                     back_scratcher.delete()
                     deleted_scratchers.append(scratcher_id)
                 except Exception as e:
-                    not_deleted_scratchers.append((data['id']))
-                    # return Response({'error': str(data['id']) + ' does not exist'}, status=400)
+                    not_deleted_scratchers.append(int(scratcher_id))
         return Response({'successful_deletions': deleted_scratchers, 'failed_deletions': not_deleted_scratchers})
 

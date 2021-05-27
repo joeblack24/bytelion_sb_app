@@ -42,12 +42,7 @@ def create_back_scratcher(request):
     if request.method != 'POST':
         return Response({'error': 'Invalid request type'})
     else:
-        # try:
-        print(f'type {type(request.data)}')
-        print(f'Request data:{request.data}')
         data = request.data
-        print(f'parsed data - {data}')
-        print('size type: ', type(data['size']))
         new_back_scratcher = BackScratchers(name=data['name'], description=data['description'])
         size_list=[]
         for size in data['size']:
@@ -55,7 +50,6 @@ def create_back_scratcher(request):
                 current_size = Size.objects.filter(size__iexact=size)
             except Exception as e:
                 return Response({'error': size + ' does not exist'}, status=400)
-            print(f'got size {current_size}')
             if current_size:
                 size_list.append(current_size[0])
             else:
@@ -65,8 +59,6 @@ def create_back_scratcher(request):
                 size_list.append(size)
         new_back_scratcher.save()
         new_back_scratcher.size.set(size_list)
-        print('size set')
-        print('new_back_scratcher:',new_back_scratcher)
 
         return Response({'success': f'Back Scratcher {new_back_scratcher.name} added',
                          'id': new_back_scratcher.id})
@@ -89,13 +81,12 @@ def update_back_scratcher(request):
             if 'description' in data.keys():
                 back_scratcher.description = data['description']
             if 'size' in data.keys():
-                size_list=[]
+                size_list = []
                 for size in data['size']:
                     try:
                         current_size = Size.objects.filter(size__iexact=size)
                     except Exception as e:
                         return Response({'error': size + ' does not exist'}, status=400)
-                    print(f'got size {current_size}')
                     if current_size:
                         size_list.append(current_size[0])
                 back_scratcher.size.set(size_list)

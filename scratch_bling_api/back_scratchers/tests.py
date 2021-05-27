@@ -7,6 +7,7 @@ class BackScratcherTestCase(TestCase):
         self.back_scratcher = BackScratchers(name='Test Scratcher', description='Testing')
         self.test_size = Size()
         self.test_size.size = 'S'
+        self.test_size.save()
         self.back_scratcher.save()
         self.back_scratcher.size.set([self.test_size])
         self.assertEqual(self.back_scratcher.name, 'Test Scratcher')
